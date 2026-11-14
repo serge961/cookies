@@ -1,1 +1,123 @@
+<style>
+        .cookie-message {
+            position: fixed;
+            z-index: 1000;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            max-width: 350px;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            animation: fadeIn 0.5s ease-in-out;
+            display: none;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .cookie-message-inner {
+            display: grid;
+            justify-items: start;
+            grid-gap: 15px;
+            font-size: 14px;
+            padding: 20px;
+            line-height: 1.5;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.15);
+        }
+        
+        .cookie-message-text {
+            color: #5a5a5a;
+        }
+        
+        .cookie-message-link {
+            color: #01356f;
+            text-decoration: underline;
+        }
+        
+        .cookie-message-inner .button {
+            background: #e1e1e1;
+            color: #878787;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .cookie-message-inner .button:hover {
+            background-color: #01356f;
+            color: #fff;
+        }
+        
+        @media (max-width: 480px) {
+            .cookie-message {
+                max-width: 100%;
+                left: 10px;
+                right: 10px;
+                bottom: 10px;
+            }
+        }
+    </style>
 
+    <!-- Основное содержимое вашего сайта -->
+    
+    <!-- Блок уведомления о cookies -->
+    <div class="cookie-message js-cookie-message">
+        <div class="cookie-message-inner">
+            <div class="cookie-message-text">
+                Наш сайт использует cookies, включая сервисы веб-аналитики (файлы с данными о прошлых посещениях сайта). Продолжая пользоваться сайтом, вы соглашаетесь с
+                <a href="/privacy-policy" class="cookie-message-link">политикой конфиденциальности</a>.
+            </div>
+            <button class="btn button js-cookie-message-confirm">Принять</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Проверяем, было ли уже принято соглашение
+            if (!localStorage.getItem('cookieAccept')) {
+                const cookieMessage = document.querySelector('.js-cookie-message');
+                
+                // Показываем сообщение
+                cookieMessage.style.display = 'block';
+                
+                // Обработчик для кнопки подтверждения
+                document.querySelector('.js-cookie-message-confirm').addEventListener('click', function(e) {
+                    // Сохраняем согласие в localStorage
+                    localStorage.setItem('cookieAccept', '1');
+                    
+                    // Скрываем сообщение с анимацией
+                    cookieMessage.style.opacity = '0';
+                    setTimeout(() => {
+                        cookieMessage.style.display = 'none';
+                    }, 300);
+                });
+                
+                // Дополнительно: скрытие при клике вне блока
+                document.addEventListener('click', function(e) {
+                    if (!cookieMessage.contains(e.target) && e.target !== cookieMessage) {
+                        cookieMessage.style.opacity = '0';
+                        setTimeout(() => {
+                            cookieMessage.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            }
+            
+            // Проверяем, нужно ли загружать аналитику
+            if (localStorage.getItem('cookieAccept')) {
+                loadAnalytics();
+            }
+        });
+        
+        // Функция для загрузки аналитики (пример)
+        function loadAnalytics() {
+            console.log('Loading analytics...');
+            // Здесь можно добавить код для загрузки Google Analytics, Yandex.Metrika и т.д.
+        }
+    </script>
